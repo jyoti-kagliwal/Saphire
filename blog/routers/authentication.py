@@ -1,9 +1,9 @@
-from fastapi import APIRouter, status, HTTPException
-from fastapi import Depends, status, HTTPException
-from blog import schemas, models, database
+from fastapi import APIRouter, status, Depends
+from blog import schemas, database, oauth2
 from sqlalchemy.orm import Session
 from typing import List
 from blog.repository import authentication
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 router = APIRouter(
@@ -13,5 +13,5 @@ get_db = database.get_db
 
 
 @router.post('/',  status_code= status.HTTP_201_CREATED)
-def login_session(request:schemas.Login, db: Session = Depends(get_db)):
+def login_session(request:OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     return authentication.login(request, db)
